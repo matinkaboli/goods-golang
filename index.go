@@ -1,13 +1,20 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"log"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/matinkaboli/goods-golang/v1/users"
+)
 
 func main() {
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello World!")
-	})
+	api := app.Group("/api")
+	v1 := api.Group("/v1")
+	usersGroup := v1.Group("/users")
 
-	app.Listen(":4567")
+	users.RegisterUsers(usersGroup)
+
+	log.Fatal(app.Listen(":4567"))
 }
