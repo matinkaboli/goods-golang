@@ -4,17 +4,15 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/matinkaboli/goods-golang/v1/users"
+	"github.com/matinkaboli/goods-golang/database"
+	routes_v1 "github.com/matinkaboli/goods-golang/routes/v1"
 )
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{})
+	database.Connect()
 
-	api := app.Group("/api")
-	v1 := api.Group("/v1")
-	usersGroup := v1.Group("/users")
-
-	users.RegisterUsers(usersGroup)
+	routes_v1.Routes(app)
 
 	log.Fatal(app.Listen(":4567"))
 }
