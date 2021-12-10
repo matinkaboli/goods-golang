@@ -20,15 +20,13 @@ func RegisterUsersHandler(c *fiber.Ctx) error {
 	body := new(RegisterBody)
 
 	if err := c.BodyParser(body); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
+		return fiber.NewError(fiber.StatusInternalServerError, "Invalid Body")
 	}
 
 	errors := utils.ValidateStruct(*body)
 
 	if errors != nil {
-		return c.JSON(errors)
+		return utils.NewError(c, fiber.StatusBadRequest, errors)
 	}
 
 	hashed := sha256.Sum256([]byte(body.Password))
@@ -44,9 +42,7 @@ func RegisterUsersHandler(c *fiber.Ctx) error {
 
 	if dbc := db.Create(user); dbc.Error != nil {
 		if utils.IsUniqueViolation(dbc.Error) {
-			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
-				"message": dbc.Error,
-			})
+			return fiber.NewError(fiber.StatusConflict, "Phone is duplicated")
 		}
 	}
 
