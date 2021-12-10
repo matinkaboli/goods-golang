@@ -19,13 +19,13 @@ type RegisterBody struct {
 func RegisterUsersHandler(c *fiber.Ctx) error {
 	body := new(RegisterBody)
 
+	// Parse JSON from Body Parser and fill body
 	if err := c.BodyParser(body); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Invalid Body")
 	}
 
-	errors := utils.ValidateStruct(*body)
-
-	if errors != nil {
+	// Validate body from RegisterBody
+	if errors := utils.ValidateStruct(*body); errors != nil {
 		return utils.NewError(c, fiber.StatusBadRequest, errors)
 	}
 
