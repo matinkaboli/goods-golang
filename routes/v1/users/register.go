@@ -1,9 +1,6 @@
 package users
 
 import (
-	"crypto/sha256"
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/matinkaboli/goods-golang/database"
 	"github.com/matinkaboli/goods-golang/models"
@@ -29,15 +26,12 @@ func RegisterUsersHandler(c *fiber.Ctx) error {
 		return utils.NewError(c, fiber.StatusBadRequest, errors)
 	}
 
-	hashed := sha256.Sum256([]byte(body.Password))
-	hashed2 := fmt.Sprintf("%x", hashed)
-
 	db := database.DB
 
 	user := &models.User{
 		Name:     body.Name,
 		Phone:    body.Phone,
-		Password: hashed2,
+		Password: utils.HashString(body.Password),
 	}
 
 	if dbc := db.Create(user); dbc.Error != nil {
