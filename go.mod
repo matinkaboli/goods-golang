@@ -4,6 +4,8 @@ go 1.16
 
 require (
 	github.com/gofiber/fiber/v2 v2.22.0
+	github.com/jackc/pgconn v1.10.1 // indirect
+	github.com/jackc/pgerrcode v0.0.0-20201024163028-a0d42d470451 // indirect
 	github.com/jackc/pgx/v4 v4.14.0 // indirect
 	github.com/jinzhu/now v1.1.3 // indirect
 	github.com/lib/pq v1.10.4 // indirect

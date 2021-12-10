@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/matinkaboli/goods-golang/database"
 	"github.com/matinkaboli/goods-golang/models"
+	"github.com/matinkaboli/goods-golang/utils"
 )
 
 func RegisterUsersHandler(c *fiber.Ctx) error {
@@ -30,7 +31,9 @@ func RegisterUsersHandler(c *fiber.Ctx) error {
 	}
 
 	if dbc := db.Create(user); dbc.Error != nil {
-		return c.SendStatus(fiber.StatusConflict)
+		if utils.IsUniqueViolation(dbc.Error) {
+			return c.SendString("Duplicated")
+		}
 	}
 
 	return c.JSON(&user)
